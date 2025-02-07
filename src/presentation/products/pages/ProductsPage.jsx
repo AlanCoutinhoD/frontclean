@@ -1,14 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../../shared/components/Layout/Layout';
 import ProductTable from '../components/ProductTable';
 import AddProductButton from '../components/AddProductButton';
+import { ProductRepository } from '../../../infrastructure/products/repositories/ProductRepository';
+import { GetProductsUseCase } from '../../../application/products/useCases/GetProductsUseCase';
 
 const ProductsPage = () => {
-  const [products] = useState([
-    { id: 1, nombre: 'Producto A', precio: '19.99' },
-    { id: 2, nombre: 'Producto B', precio: '29.99' },
-    { id: 3, nombre: 'Producto C', precio: '39.99' },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const productRepository = new ProductRepository();
+        const getProductsUseCase = new GetProductsUseCase(productRepository);
+        const productsData = await getProductsUseCase.execute();
+        setProducts(productsData);
+      } catch (err) {
+        setError('Error al cargar los productos');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const handleAddProduct = () => {
     console.log('Agregar producto');
@@ -21,6 +39,32 @@ const ProductsPage = () => {
   const handleDeleteProduct = (id) => {
     console.log('Eliminar producto:', id);
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container-fluid py-4">
+          <div className="text-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="container-fluid py-4">
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

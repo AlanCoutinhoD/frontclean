@@ -1,14 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../../shared/components/Layout/Layout';
 import EmployeeTable from '../components/EmployeeTable';
 import AddEmployeeButton from '../components/AddEmployeeButton';
+import { EmployeeRepository } from '../../../infrastructure/employees/repositories/EmployeeRepository';
+import { GetEmployeesUseCase } from '../../../application/employees/useCases/GetEmployeesUseCase';
 
 const EmployeesPage = () => {
-  const [employees] = useState([
-    { id: 1, nombre: 'Juan Pérez' },
-    { id: 2, nombre: 'María García' },
-    { id: 3, nombre: 'Carlos Rodríguez' },
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadEmployees = async () => {
+      try {
+        const employeeRepository = new EmployeeRepository();
+        const getEmployeesUseCase = new GetEmployeesUseCase(employeeRepository);
+        const employeesData = await getEmployeesUseCase.execute();
+        setEmployees(employeesData);
+      } catch (err) {
+        setError('Error al cargar los empleados');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEmployees();
+  }, []);
 
   const handleAddEmployee = () => {
     console.log('Agregar empleado');
@@ -21,6 +39,32 @@ const EmployeesPage = () => {
   const handleDeleteEmployee = (id) => {
     console.log('Eliminar empleado:', id);
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container-fluid py-4">
+          <div className="text-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="container-fluid py-4">
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

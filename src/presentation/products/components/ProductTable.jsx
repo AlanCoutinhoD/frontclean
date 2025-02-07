@@ -17,7 +17,7 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
             <tr key={product.id}>
               <td>{product.id}</td>
               <td>{product.nombre}</td>
-              <td>${product.precio}</td>
+              <td>${product.precio.toFixed(2)}</td>
               <td>
                 <div className="d-flex gap-3">
                   <button
