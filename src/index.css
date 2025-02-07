@@ -1,0 +1,36 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Estilos personalizados adicionales */
+.nav-pills .nav-link {
+  border-radius: 20px;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #212529;
+}
+
+.btn-dark {
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.table > :not(caption) > * > * {
+  padding: 1rem 0.5rem;
+}
