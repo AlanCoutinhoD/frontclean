@@ -13,4 +13,34 @@ export class EmployeeRepository {
       throw error;
     }
   }
+
+  async createEmployee(name) {
+    try {
+      const response = await axiosInstance.post('/employees', { name });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating employee:', error);
+      throw error;
+    }
+  }
+
+  async deleteEmployee(id) {
+    try {
+      await axiosInstance.delete(`/employees/${id}`);
+      return true;
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      throw error;
+    }
+  }
+
+  async updateEmployee(id, name) {
+    try {
+      const response = await axiosInstance.put(`/employees/${id}`, { name });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      throw error;
+    }
+  }
 } 

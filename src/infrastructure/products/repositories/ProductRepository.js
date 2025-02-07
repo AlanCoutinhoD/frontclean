@@ -14,4 +14,17 @@ export class ProductRepository {
       throw error;
     }
   }
+
+  async createProduct(name, price) {
+    try {
+      const response = await axiosInstance.post('/products', { 
+        name, 
+        price: Number(price) 
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  }
 } 
